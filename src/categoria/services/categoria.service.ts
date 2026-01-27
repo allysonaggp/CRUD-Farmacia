@@ -10,14 +10,7 @@ export class CategoriaService {
     private categoriaRepository: Repository<Categoria>,
   ) {}
 
-  // Metodo para Filtrar por Categoria
-  async findByCategoria(categoria: string): Promise<Categoria[]> {
-    return await this.categoriaRepository.find({
-      where: { categoria: ILike(`%${categoria}%`) },
-    });
-  }
-
-  // Metodo para mopstrar todas as Cetegorias
+  // Metodo para mostrar todas as Cetegorias
   async findAll(): Promise<Categoria[]> {
     return await this.categoriaRepository.find();
   }
@@ -36,11 +29,18 @@ export class CategoriaService {
     return categoria;
   }
 
+  // Metodo para Filtrar por Categoria
+  async findByCategoria(categoria: string): Promise<Categoria[]> {
+    return await this.categoriaRepository.find({
+      where: { categoria: ILike(`%${categoria}%`) },
+    });
+  }
+
   // Metodo usado para criar uma Categoria
   async create(categoria: Categoria): Promise<Categoria> {
-    const BuscarCategoria = await this.findByCategoria(categoria.categoria);
-    if (BuscarCategoria)
-      throw new HttpException('O Usuário já Existe', HttpStatus.BAD_REQUEST);
+    const buscarCategoria = await this.findByCategoria(categoria.categoria);
+    if (buscarCategoria)
+      throw new HttpException('A Categoria já Existe', HttpStatus.BAD_REQUEST);
     return await this.categoriaRepository.save(categoria);
   }
 
@@ -56,7 +56,7 @@ export class CategoriaService {
     const result = await this.categoriaRepository.delete(id);
 
     return {
-      message: 'Categoria deletada com sucesso!',
+      message: 'Categoria deletada com Sucesso!',
       result,
     };
   }
