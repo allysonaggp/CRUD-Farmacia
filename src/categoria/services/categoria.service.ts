@@ -12,13 +12,20 @@ export class CategoriaService {
 
   // Metodo para mostrar todas as Cetegorias
   async findAll(): Promise<Categoria[]> {
-    return await this.categoriaRepository.find();
+    return await this.categoriaRepository.find({
+      relations: {
+        produto: true,
+      },
+    });
   }
 
   // Metodo usado para Pesquisar por Id
   async findById(id: number): Promise<Categoria> {
     const categoria = await this.categoriaRepository.findOne({
       where: { id: id },
+      relations: {
+        produto: true,
+      },
     });
 
     if (!categoria)

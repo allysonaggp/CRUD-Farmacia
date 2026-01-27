@@ -13,13 +13,20 @@ export class ProdutoService {
 
   // Metodo para mostrar todos os produtos
   async findAll(): Promise<Produto[]> {
-    return await this.produtoRepository.find();
+    return await this.produtoRepository.find({
+      relations: {
+        categoria: true,
+      },
+    });
   }
 
   // Metodo para pesquisar por Id
   async findById(id: number): Promise<Produto> {
     const categoria = await this.produtoRepository.findOne({
       where: { id: id },
+      relations: {
+        categoria: true,
+      },
     });
     if (!categoria)
       throw new HttpException('Produto não encontrado!', HttpStatus.OK);
